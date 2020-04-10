@@ -1,10 +1,16 @@
 import setuptools
+
+with open('README.md', encoding='utf-8') as f:
+    long_description = f.read()
+
 setuptools.setup(
     name='pathtub',
-    version='1.0.0',
+    version='1.0.1',
     url='https://github.com/np-8/pathtub',
     author='Niko Pasanen',
     description='Reading and editing Windows PATH.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author_email='niko@pasanen.me',
     license='MIT',
     packages=setuptools.find_packages(),
