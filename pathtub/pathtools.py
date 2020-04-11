@@ -15,7 +15,7 @@ class PathEditException(Exception):
 
 def ensure(item, permanent=False, permanent_mode='user', force=False):
     """
-    Ensure that an item (folder) is if PATH
+    Ensure that an item (folder) is in PATH
     variable. If `item` is found in the Process 
     (temporary) PATH, does nothing.
 
