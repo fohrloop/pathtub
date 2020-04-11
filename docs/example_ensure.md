@@ -1,4 +1,4 @@
-# Example of using `pathtub.ensure`
+# Using `pathtub.ensure` to add DLL to PATH
 
 ## Description of problem
 - Want to use [pyusb](https://github.com/pyusb/pyusb), and need to ensure that it finds the [libusb-1.0.dll](https://github.com/libusb/libusb/releases).

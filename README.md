@@ -24,8 +24,14 @@ pip install pathtub
 - [Rest of the docs](#rest-of-the-docs)
   
 ### ✅ Ensuring folder is in PATH
-- It is safe to call `ensure()` every time you load your script, for example. It only does something if the dll_folder is not found in your process `PATH`.
-- The last "trailing" backslash (if any) is ignored when comparing any two folders.
+#### What is ensure()?
+`ensure(folder)`  checks if `folder` is in Process PATH<br>
+- If `folder` is in Process PATH, does nothing
+- If `folder` is not in Process PATH, adds it to Process PATH
+- If `folder` is not in Process PATH **and** `permanent=True`, adds *also* to the User PATH (permanent) or System PATH (permanent, needs admin rights).
+#### Example code for ensure()
+- It is safe to call `ensure()` every time you load your script, for example. It only does something if `folder` is not found in your process `PATH`.
+- The last "trailing" backslash of `folder` (if any) is ignored when comparing to any other folders.
 
 ```python
 from pathtub import ensure
@@ -34,7 +40,8 @@ dll_folder = r'C:\my favourite\dlls'
 # 2) Add to Process PATH (temporary) if not found
 ensure(dll_folder)
 ```
-- You may also make the addition permanent (& visible to other processes).
+#### Example code for ensure() with permanent addition
+- You may also make the addition permanent (& visible to other processes). 
 - Also this is safe to call every time script is starting. 
 ```python
 from pathtub import ensure
@@ -44,8 +51,8 @@ dll_folder = r'C:\my favourite\dlls'
 # 3) Add also to User PATH (permanent), if 2) happens
 ensure(dll_folder, permanent=True)
 ```
-- The Process PATH is loaded from parent process or from the permanent (User/System) PATH when process is started. For more info, see: [Windows PATH variables](docs/path_variables.md).
-- ["Real life" example using ensure](docs/example_ensure.md).
+- The Process PATH is initiated by copying it from parent process or taking copy of union of the permanent (User/System) PATH when process is started. For more info, see: [Windows PATH variables](docs/path_variables.md).
+- More detailed example: [Using `pathtub.ensure` to add DLL to PATH](docs/example_ensure.md).
 - Full documentation of `ensure()` is in the source code ([pathtools.py](pathtub/pathtools.py)).
 ### 🧽 Cleaning PATH
 #### Cleaning paths means
