@@ -87,7 +87,7 @@ def ensure(item, permanent=False, permanent_mode='user', force=False):
         return False
 
     if not found:
-        new_path = path + ';' + item
+        new_path = path + os.pathsep + item
 
     set_process = _get_set_function('process')
     set_process(new_path)
@@ -149,7 +149,7 @@ def _remove_user_machine(path_user,
 
 def path_string_to_list(path_str):
     path = []
-    for x in path_str.strip().split(';'):
+    for x in path_str.strip().split(os.pathsep):
         if not x:
             continue
         if x.endswith('\\'):
@@ -220,9 +220,9 @@ def clean(sort=True, remove_non_existent=True, remove_user_duplicates=True):
         path_user = sorted(path_user, key=lambda x: x.lower())
         path_machine = sorted(path_machine, key=lambda x: x.lower())
 
-    set_user_path(';'.join(path_user))
+    set_user_path(os.pathsep.join(path_user))
     try:
-        set_machine_path(';'.join(path_machine))
+        set_machine_path(os.pathsep.join(path_machine))
     except PathEditException:
         logger.warning('Could not clean the SYSTEM PATH! Needs Admin rights!')
 
@@ -309,7 +309,7 @@ def add_to_path(item, mode='process'):
 
     f = _get_set_function(mode)
 
-    new_path = path + ';' + item
+    new_path = path + os.pathsep + item
     f(new_path)
     return True
 
@@ -351,10 +351,10 @@ def remove_from_path(item, mode='process'):
 
     f = _get_set_function(mode)
 
-    paths = path.strip().split(';')
+    paths = path.strip().split(os.pathsep)
     paths.pop(paths.index(item))
     # sometimes there are "empty" entries (;;) in the PATH: remove these, too.
-    new_path = ';'.join([p for p in paths if p])
+    new_path = os.pathsep.join([p for p in paths if p])
     f(new_path)
     return True
 
@@ -388,7 +388,7 @@ def is_in_path_return_path(item, mode='process'):
     if item.endswith('\\'):
         item = item[:-1]
     path = get_path(mode)
-    paths = {x[:-1] if x.endswith('\\') else x for x in path.split(';')}
+    paths = {x[:-1] if x.endswith('\\') else x for x in path.split(os.pathsep)}
 
     found = item in paths
 
