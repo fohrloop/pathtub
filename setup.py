@@ -5,7 +5,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setuptools.setup(
     name='pathtub',
-    version='1.0.1',
+    version='1.1.0',
     url='https://github.com/np-8/pathtub',
     author='Niko Pasanen',
     description='Reading and editing Windows PATH.',

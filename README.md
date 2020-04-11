@@ -1,149 +1,70 @@
-## pathtub
+## 🛁 pathtub 🐍
 
-Simple python functions for reading and editing Windows PATH.
-
-
+Simple python functions for reading and editing [Windows PATH variables](docs/path_variables.md).
 
 
-### Features
--  Uses Powershell commands under the hood
-   -  `$Env:Path`
-   -  `[Environment]::GetEnvironmentVariable(...)`
-   -  `[Environment]::SetEnvironmentVariable(...)`
--   Is not limited by the [1024 character limit](https://superuser.com/questions/387619/overcoming-the-1024-character-limit-with-setx).
+   &nbsp;&nbsp;&nbsp;&nbsp;✅ **Ensuring** that an folder exists in Path. <br>
+   &nbsp;&nbsp;&nbsp;&nbsp;🧽 **Cleaning** the PATH (duplicates, removed folders, sorting) <br>
+   &nbsp;&nbsp;&nbsp;&nbsp;✏️ **Adding** or **removing** folders to/from Path (temporary or permanently) <br>
 
 
 
 ## Installing
-### Option A: Install from PyPi
 ```
 pip install pathtub
 ```
 
-### Option B: Install from GitHub
-- Download this package and run
-```
-pip install <this_folder_path>
-```
-where `<this_folder_path>` refers to the folder with the `setup.py`. 
 
+## Usage
 
-# Usage
-- [Getting path variables](#getting-path-variables)
-- [Setting PATH (User) variables](#setting-path-user-variables)
-- [Setting PATH (System/Machine) variables](#setting-path-systemmachine-variables)
-- [Removing PATH (User) variables](#removing-path-user-variables)
-- [Removing PATH (System/Machine) variables](#removing-path-systemmachine-variables)
- - [Checking if folder is in PATH](#checking-if-folder-is-in-path)
+- [Ensuring folder is in PATH](#%e2%9c%85-ensuring-folder-is-in-path)
+- [Cleaning PATH](#%f0%9f%a7%bd-cleaning-path)
+- [Rest of the docs](#rest-of-the-docs)
   
-
-### Getting path variables
-```python
-from pathtub import get_path
-
-# Reads $Env:Path
-path = get_path()
-# Reads [Environment]::GetEnvironmentVariable('Path', 'User')
-path_user = get_path("user")
-# Reads [Environment]::GetEnvironmentVariable('Path', 'Machine')
-path_machine = get_path("machine")
-```
-#### Example output
-```python
-In [1]: print(get_path('user')) # returns a str
-C:\Python\Python37\Scripts\;C:\Python\Python37\;C:\Python\Python37-32\Scripts\;C:\Python\Python37-32\;C:\Users\USER\AppData\Roaming\npm;C:\Users\USER\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft VS Code\bin;C:\Programs;C:\Programs\fciv;C:\texlive\2018\bin\win32;C:\Programs\apache-maven-3.6.2\bin;C:\Program Files\Java\jdk-13.0.1\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Programs\cloc;C:\Users\USER\AppData\Local\Programs\Microsoft VS Code\bin;
-``` 
-- **Note**: For some reason, the `$Env:Path` does not always update instantly (without reboot/relogin), even if the `[Environment]::GetEnvironmentVariable('Path', ...)` are updated. 
-  
-### Setting PATH (User) variables
-
-- User PATH before edits: [Screenshot](img/before-setting-user.png)
-- Adding a folder to PATH
-  
-```python
-In [1]: from pathtub import add_to_path
-
-In [2]: added = add_to_path(r'C:\My new folder\added to user PATH')
-
-In [3]: added
-Out[3]: True
-
-# There is protection against adding duplicate entries
-In [4]: added = add_to_path(r'C:\My new folder\added to user PATH')
-
-In [5]: added
-Out[5]: False
-```
-
-- User PATH after edits: [Screenshot](img/after-setting-user.png)
-
-
-
-### Setting PATH (System/Machine) variables
-- Similar to setting User PATH variables
-- Change mode to "machine" and *Run the script with Admin rights*.
-
-```
-from pathtub import add_to_path
-added = add_to_path(r'C:\My new folder\added to machine PATH', mode='machine')
-```
-
-### Removing PATH (User) variables
+### ✅ Ensuring folder is in PATH
+- It is safe to call `ensure()` every time you load your script, for example. It only does something if the dll_folder is not found in your process `PATH`.
+- The last "trailing" backslash (if any) is ignored when comparing any two folders.
 
 ```python
-In [1]: from pathtub import remove_from_path
-
-In [2]: removed = remove_from_path(r'C:\My new folder\added to user PATH')
-
-In [3]: removed
-Out[3]: True
-
-# Can only remove once. Safe to call multiple times.
-In [4]: removed = remove_from_path(r'C:\My new folder\added to user PATH')
-
-In [5]: removed
-Out[5]: False
-``` 
-
-
-### Removing PATH (System/Machine) variables
-- Similar to removing User PATH variables
-- Change mode to "machine" and *Run the script with Admin rights*.
-
+from pathtub import ensure
+dll_folder = r'C:\my favourite\dlls'
+# 1) Check Process PATH, i.e. os.environ['PATH']
+# 2) Add to Process PATH (temporary) if not found
+ensure(dll_folder)
 ```
-from pathtub import add_to_path
-removed = remove_from_path(r'C:\My new folder\added to machine PATH', mode='machine')
-```
-### Checking if folder is in PATH
-- **Note**: You don't have to worry if the saved PATH item ends with a backslash or not; both cases are checked.
+- You may also make the addition permanent (& visible to other processes).
+- Also this is safe to call every time script is starting. 
 ```python
-# Check the `$Env:Path` (Powershell) / `PATH` (cmd) variable
-found = is_in_path() # same as is_in_path("path") 
-
-# Checks the `[Environment]::GetEnvironmentVariable('Path','User')`; The "User PATH"
-found_user = is_in_path("user")
-
-# Checks the `[Environment]::GetEnvironmentVariable('Path','Machine')`; The "System PATH"
-found = is_in_path("machine")
+from pathtub import ensure
+dll_folder = r'C:\my favourite\dlls'
+# 1) Check Process PATH
+# 2) Add to Process PATH if not found
+# 3) Add also to User PATH (permanent), if 2) happens
+ensure(dll_folder, permanent=True)
 ```
-#### Example
-```python
-In [1]: from pathtub import is_in_path
+- The Process PATH is loaded from parent process or from the permanent (User/System) PATH when process is started. For more info, see: [Windows PATH variables](docs/path_variables.md).
+- ["Real life" example using ensure](docs/example_ensure.md).
+- Full documentation of `ensure()` is in the source code ([pathtools.py](pathtub/pathtools.py)).
+### 🧽 Cleaning PATH
+#### Cleaning paths means
+1. Removing duplicates from the PATH (trailing backslash neglected)
+2. Removing empty entries from PATH
+3. Sorting alphabetically (optional, Default: True)
+4. Removing folders that do not exist (optional, Default: True)
+5. Removing from "User" list the ones that are in the "System" list (optional, default: True)
 
-In [2]: found = is_in_path('C:\\Python\\Python37\\', 'user')
+#### Screenshots of User PATH before and after clean:
+   ![User PATH](img/user-before-after-clean.png)  
 
-In [3]: found
-Out[3]: True
-
-# It does not matter if the seach folder or the folder saved
-# to PATH has "\" as the last character.
-In [4]: found = is_in_path(r'C:\Python\Python37', 'user')
-
-In [5]: found
-Out[5]: True
-
-In [6]: found = is_in_path(r'C:\Nonexistent\path', 'user')
-
-In [7]: found
-Out[7]: False
+#### Code example for clean
 ```
+from pathtub import clean
+clean()
+
+# possible parameters:
+# clean(sort=True, remove_non_existent=True, remove_user_duplicates=True)
+```
+- For more detailed example, see [Full example of pathtub.clean](docs/example_clean.md)
+
+### Rest of the docs
+Did not find what you were looking for? See the [Rest of the docs](docs/rest_of_the_docs.md).
