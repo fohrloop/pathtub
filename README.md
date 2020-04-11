@@ -17,8 +17,8 @@ pip install pathtub
 
 ## Usage
 
-- [Ensuring folder is in PATH](#%e2%9c%85-ensuring-folder-is-in-path)
-- [Cleaning PATH](#%f0%9f%a7%bd-cleaning-path)
+- [Ensuring folder is in PATH](#-ensuring-folder-is-in-path)
+- [Cleaning PATH](#-cleaning-path)
 - [Rest of the docs](#rest-of-the-docs)
   
 ### ✅ Ensuring folder is in PATH
@@ -65,6 +65,7 @@ clean()
 # clean(sort=True, remove_non_existent=True, remove_user_duplicates=True)
 ```
 - For more detailed example, see [Full example of pathtub.clean](docs/example_clean.md)
+- Full documentation of `clean()` is in the source code ([pathtools.py](pathtub/pathtools.py)).
 
 ### Rest of the docs
 Did not find what you were looking for? See the [Rest of the docs](docs/rest_of_the_docs.md).
