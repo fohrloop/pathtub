@@ -6,3 +6,8 @@ from .pathtools import (
     remove_from_path,
     is_in_path,
 )
+
+from .dll import (
+    ensure_dll,
+    forget_dll,
+)

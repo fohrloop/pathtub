@@ -13,11 +13,12 @@
   
 ## Advanced usage topics
 - [Getting path variables](#getting-path-variables)
-- [Setting PATH (User) variables](#setting-path-user-variables)
-- [Setting PATH (System/Machine) variables](#setting-path-systemmachine-variables)
-- [Removing PATH (User) variables](#removing-path-user-variables)
-- [Removing PATH (System/Machine) variables](#removing-path-systemmachine-variables)
- - [Checking if folder is in PATH](#checking-if-folder-is-in-path)
+- [Adding permanently to PATH (User)](#adding-permanently-to-path-user)
+- [Adding permanently to PATH (System/Machine)](#adding-permanently-to-path-systemmachine)
+- [Removing permanently from PATH (User)](#removing-permanently-from-path-user)
+- [Removing permanently from PATH  (System/Machine)](#removing-permanently-from-path-systemmachine)
+- [Checking if folder is in PATH](#checking-if-folder-is-in-path)
+
   
 
 

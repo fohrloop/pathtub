@@ -2,10 +2,11 @@
 
 ## 🛁 pathtub
 
-Simple python functions for reading and editing [Windows PATH variables](docs/path_variables.md).
+Simple python functions for reading and editing [Windows PATH variables](docs/path_variables.md) and  DLL searchpaths.
 
 
-   &nbsp;&nbsp;&nbsp;&nbsp;✅ **Ensuring** that an folder exists in Path. <br>
+   &nbsp;&nbsp;&nbsp;&nbsp;✅ **Ensuring** that a folder exists in Path. <br>
+   &nbsp;&nbsp;&nbsp;&nbsp;🔗 **Ensuring** that DLL(s) are found by python. <br>
    &nbsp;&nbsp;&nbsp;&nbsp;🧽 **Cleaning** the PATH (duplicates, removed folders, sorting) <br>
    &nbsp;&nbsp;&nbsp;&nbsp;✏️ **Adding** or **removing** folders to/from Path (temporary or permanently) <br>
 
@@ -20,59 +21,63 @@ pip install pathtub
 ## Usage
 
 - [Ensuring folder is in PATH](#-ensuring-folder-is-in-path)
+- [Ensuring that DLL(s) are found](#%f0%9f%94%97-ensuring-that-dlls-are-found)
 - [Cleaning PATH](#-cleaning-path)
 - [Rest of the docs](#rest-of-the-docs)
+  - [Getting path variables](docs/rest_of_the_docs.md#getting-path-variables)
+  - [Adding permanently to PATH](docs/rest_of_the_docs.md#adding-permanently-to-path-user)
+  - [Removing permanently from PATH](docs/rest_of_the_docs.md#removing-permanently-from-path-user)
+  - [Checking if folder is in PATH](docs/rest_of_the_docs.md#checking-if-folder-is-in-path)
   
+
+
 ### ✅ Ensuring folder is in PATH
+```python
+from pathtub import ensure
+folder_to_add = r'C:\something to add to path\folder'
+# 1) Check Process PATH
+# 2) Add to Process PATH if not found
+# 3) Add also to User PATH (permanent), if 2) happens
+ensure(folder_to_add, permanent=True)
+```
 #### What is ensure()?
 `ensure(folder)`  checks if `folder` is in Process PATH<br>
 - If `folder` is in Process PATH, does nothing
 - If `folder` is not in Process PATH, adds it to Process PATH
-- If `folder` is not in Process PATH **and** `permanent=True`, adds *also* to the User PATH (permanent) or System PATH (permanent, needs admin rights).
-#### Example code for ensure()
-- It is safe to call `ensure()` every time you load your script, for example. It only does something if `folder` is not found in your process `PATH`.
-- The last "trailing" backslash of `folder` (if any) is ignored when comparing to any other folders.
+- If `folder` is not in Process PATH **and** `permanent=True`, adds *also* to the User PATH or System PATH, depending on the `permanent_mode`. 
+  
+⚠️ If you want to ensure a *DLL folder* is visible to python, use `ensure_dll` instead. 
 
+
+### 🔗 **Ensuring** that DLL(s) are found 
 ```python
-from pathtub import ensure
-dll_folder = r'C:\my favourite\dlls'
-# 1) Check Process PATH, i.e. os.environ['PATH']
-# 2) Add to Process PATH (temporary) if not found
-ensure(dll_folder)
+from pathtub import ensure_dll
+dll_folder = r'C:\path to\libusb-1.0.21\MS32\dll'
+ensure_dll(dll_folder)
 ```
-#### Example code for ensure() with permanent addition
-- You may also make the addition permanent (& visible to other processes). 
-- Also this is safe to call every time script is starting. 
-```python
-from pathtub import ensure
-dll_folder = r'C:\my favourite\dlls'
-# 1) Check Process PATH
-# 2) Add to Process PATH if not found
-# 3) Add also to User PATH (permanent), if 2) happens
-ensure(dll_folder, permanent=True)
-```
-- The Process PATH is initiated by copying it from parent process or taking copy of union of the permanent (User/System) PATH when process is started. For more info, see: [Windows PATH variables](docs/path_variables.md).
-- More detailed example: [Using `pathtub.ensure` to add DLL to PATH](docs/example_ensure.md).
-- Full documentation of `ensure()` is in the source code ([pathtools.py](pathtub/pathtools.py)).
+- `ensure_dll()` is for making sure that python finds needed DLL's (and the DLL's find their dependencies, if any.)
+- You may use `ensure_dll` and `forget_dll` for adding and removing dll folder to/from search path.
+- See also: [Example of using ensure_dll and forget_dll](docs/dll_paths.md)
+
+
+
+
 ### 🧽 Cleaning PATH
-#### Cleaning paths means
-1. Removing duplicates from the PATH (trailing backslash neglected)
-2. Removing empty entries from PATH
-3. Sorting alphabetically (optional, Default: True)
-4. Removing folders that do not exist (optional, Default: True)
-5. Removing from "User" list the ones that are in the "System" list (optional, default: True)
+```python
+from pathtub import clean
+# Default parameter values shown
+clean(sort=True, remove_non_existent=True, remove_user_duplicates=True)
+```
+### What does it do
+- Removes duplicates and empty entries (`;;`) from the "User PATH" and "System PATH" (trailing backslash neglected when comparing two folders). Editing "System PATH" needs that python is executed with Admin rights.
+- Sorts PATH(s) alphabetically (optional, enabled by default). Controlled with the `sort` parameter.
+- Removes folders from PATH(s) that do not exist on the filesystem (optional, enabled by default). Controlled with the `remove_non_existent` -parameter.
+- Removing from "User PATH" the entries that are in the "System PATH" (optional, enabled by default). Controlled with the `remove_user_duplicates`-parameter.
 
 #### Screenshots of User PATH before and after clean:
    ![User PATH](img/user-before-after-clean.png)  
 
-#### Code example for clean
-```
-from pathtub import clean
-clean()
 
-# possible parameters:
-# clean(sort=True, remove_non_existent=True, remove_user_duplicates=True)
-```
 - For more detailed example, see [Full example of pathtub.clean](docs/example_clean.md)
 - Full documentation of `clean()` is in the source code ([pathtools.py](pathtub/pathtools.py)).
 

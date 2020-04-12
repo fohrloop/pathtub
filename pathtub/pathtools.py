@@ -14,7 +14,7 @@ class PathEditException(Exception):
 
 
 def ensure(item, permanent=False, permanent_mode='user', force=False):
-    """
+    r"""
     Ensure that an item (folder) is in PATH
     variable. If `item` is found in the Process 
     (temporary) PATH, does nothing.
@@ -418,6 +418,6 @@ def is_in_path(item, mode='process'):
         True, if the `item` is in the "Path". 
         False otherwise.   
     """
-    found, path = is_in_path_return_path(item, mode)
+    found, path = is_in_path_return_path(item, mode)  # pylint: disable=unused-variable
 
     return found
