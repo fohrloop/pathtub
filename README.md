@@ -49,15 +49,16 @@ ensure(folder_to_add, permanent=True)
 ⚠️ If you want to ensure a *DLL folder* is visible to python, use `ensure_dll` instead. 
 
 
-### 🔗 **Ensuring** that DLL(s) are found 
+### 🔗 Ensuring that DLL(s) are found 
+- `ensure_dll()` is for making sure that python finds needed DLL's (and the DLL's find their dependencies, if any.)
+- It adds folder to Process PATH and, in case of Python 3.8+, *also* uses the os.add_dll_directory. ([More info](docs/dll_paths.md))
 ```python
 from pathtub import ensure_dll
 dll_folder = r'C:\path to\libusb-1.0.21\MS32\dll'
 ensure_dll(dll_folder)
 ```
-- `ensure_dll()` is for making sure that python finds needed DLL's (and the DLL's find their dependencies, if any.)
-- You may use `ensure_dll` and `forget_dll` for adding and removing dll folder to/from search path.
-- See also: [Example of using ensure_dll and forget_dll](docs/dll_paths.md)
+- Folders added with `ensure_dll` can be removed with `forget_dll` in the same process.
+- More info related to `ensure_dll` [here](docs/dll_paths.md).
 
 
 
