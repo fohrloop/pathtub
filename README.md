@@ -2,7 +2,7 @@
 
 ## 🛁 pathtub
 
-Simple python functions for reading and editing [Windows PATH variables](docs/path_variables.md) and  DLL searchpaths.
+Reading and editing [Windows PATH variables](docs/path_variables.md) and ensuring python finds your DLLs.
 
 
    &nbsp;&nbsp;&nbsp;&nbsp;✅ **Ensuring** that a folder exists in Path. <br>
