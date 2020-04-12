@@ -21,7 +21,7 @@ pip install pathtub
 ## Usage
 
 - [Ensuring folder is in PATH](#-ensuring-folder-is-in-path)
-- [Ensuring that DLL(s) are found](#%f0%9f%94%97-ensuring-that-dlls-are-found)
+- [Ensuring that DLL(s) are found](#-ensuring-that-dlls-are-found)
 - [Cleaning PATH](#-cleaning-path)
 - [Rest of the docs](#rest-of-the-docs)
   - [Getting path variables](docs/rest_of_the_docs.md#getting-path-variables)
