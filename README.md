@@ -51,7 +51,7 @@ ensure(folder_to_add, permanent=True)
 
 ### 🔗 Ensuring that DLL(s) are found 
 - `ensure_dll()` is for making sure that python finds needed DLL's (and the DLL's find their dependencies, if any.)
-- It adds folder to Process PATH and, in case of Python 3.8+, *also* uses the os.add_dll_directory. ([More info](docs/dll_paths.md))
+- If folder is not yet added, it adds folder to Process PATH and, in case of Python 3.8+, *also* uses the os.add_dll_directory ([More info](docs/dll_paths.md)). If folder is already added, does nothing.
 ```python
 from pathtub import ensure_dll
 dll_folder = r'C:\path to\libusb-1.0.21\MS32\dll'
