@@ -1,4 +1,4 @@
-![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/np-8/pathtub)&nbsp;![PyPI](https://img.shields.io/pypi/v/pathtub)&nbsp;![PyPI - Downloads](https://img.shields.io/pypi/dm/pathtub)&nbsp;![GitHub](https://img.shields.io/github/license/np-8/pathtub)
+*This project is archived, but feel free to look around! :)*
 
 ## 🛁 pathtub
 
